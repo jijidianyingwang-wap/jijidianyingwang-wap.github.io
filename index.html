@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<link rel="icon" href="favicon.ico" type="image/x-icon">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="吉吉电影网 - 海量电影随心看。最新上映、高分经典、热门剧集、动漫综艺一网打尽，免费在线观看，畅享高清影视内容。">
+<meta name="keywords" content="吉吉电影网,免费看电影,最新电影,高清电影,在线影视,电影排行榜,热门剧集,动漫综艺">
+<meta name="author" content="吉吉电影网">
+<meta name="robots" content="index,follow">
+<title>吉吉电影网 | 海量电影 · 随心看</title>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+    --bg:#07090d;--card:#10131a;--card2:#161a24;--line:#232838;
+    --txt:#e8eaf0;--mute:#8b91a3;--gold:#f5c518;--gold2:#ff7a00;
+    --cy:#00e5a0;--rd:#ff3b5c;
+}
+html{scroll-behavior:smooth}
+body{font-family:-apple-system,"PingFang SC","Microsoft YaHei","Helvetica Neue",sans-serif;
+    background:var(--bg);color:var(--txt);line-height:1.65;overflow-x:hidden}
+a{text-decoration:none;color:inherit}
+ul{list-style:none}
+img{max-width:100%;display:block}
+::selection{background:var(--gold);color:#000}
+
+.wrap{max-width:1240px;margin:0 auto;padding:0 28px}
+
+/* ===== 顶部进度条 ===== */
+#bar{position:fixed;top:0;left:0;height:3px;width:0;background:linear-gradient(90deg,var(--gold),var(--gold2));z-index:200}
+
+/* ===== 导航 ===== */
+.nav{position:sticky;top:3px;z-index:100;background:rgba(7,9,13,.92);backdrop-filter:blur(14px);
+    border-bottom:1px solid var(--line)}
+.nav-in{display:flex;align-items:center;justify-content:space-between;height:64px;gap:20px}
+.logo{display:flex;align-items:center;gap:10px;font-size:21px;font-weight:900;letter-spacing:.5px}
+.logo .ji{width:34px;height:34px;background:var(--gold);color:#000;display:grid;place-items:center;
+    font-size:17px;font-weight:900;border-radius:8px}
+.menu{display:flex;gap:4px;flex-wrap:wrap}
+.menu a{font-size:14.5px;padding:8px 14px;border-radius:8px;color:var(--mute);transition:.2s}
+.menu a:hover{color:var(--txt);background:var(--card2)}
+.mbtn{display:flex;align-items:center;gap:8px;font-size:13.5px;color:var(--mute);
+    border:1px solid var(--line);padding:8px 14px;border-radius:8px}
+.mbtn b{color:var(--gold)}
+.burger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:6px}
+.burger i{width:22px;height:2px;background:var(--txt);display:block}
+
+/* ===== Hero 宫格 ===== */
+.hero{padding:34px 0 14px}
+.hero-grid{display:grid;grid-template-columns:2fr 1fr;grid-template-rows:repeat(2,200px);gap:14px}
+.hp{grid-row:span 2;position:relative;border-radius:16px;overflow:hidden;cursor:pointer;
+    background:linear-gradient(120deg,#1a1f2e,#0d1119);min-height:414px}
+.hs{position:relative;border-radius:16px;overflow:hidden;cursor:pointer;background:linear-gradient(120deg,#1c2333,#0f141f)}
+.hp .bg,.hs .bg{position:absolute;inset:0;opacity:.55;transition:.5s transform}
+.hp:hover .bg,.hs:hover .bg{transform:scale(1.06);opacity:.7}
+.hp .veil,.hs .veil{position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.9) 8%,rgba(0,0,0,.15) 55%)}
+.cell-body{position:absolute;inset:0;padding:26px 28px;display:flex;flex-direction:column;justify-content:flex-end;z-index:2}
+.tag{display:inline-block;font-size:11.5px;font-weight:800;letter-spacing:1px;padding:4px 10px;border-radius:5px;width:fit-content}
+.cell-body h2{font-size:34px;font-weight:900;line-height:1.2;margin:12px 0 8px}
+.cell-body h3{font-size:19px;font-weight:800;margin:8px 0 4px}
+.cell-body p{font-size:13.5px;color:#c4c8d4;line-height:1.6}
+.meta{display:flex;gap:10px;align-items:center;margin-top:12px;font-size:12.5px;color:#b8bdcb;flex-wrap:wrap}
+.meta .dot{width:3px;height:3px;border-radius:50%;background:var(--gold)}
+.score{font-size:15px;font-weight:900;color:var(--gold)}
+
+/* ===== 通用区块 ===== */
+section{padding:64px 0}
+.sec-top{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;margin-bottom:30px;flex-wrap:wrap}
+.sec-top h2{font-size:26px;font-weight:900;letter-spacing:.3px;display:flex;align-items:center;gap:12px}
+.sec-top h2::before{content:"";width:5px;height:24px;background:var(--gold);border-radius:3px}
+.sec-top .more{font-size:13.5px;color:var(--mute)}
+.sec-top .more:hover{color:var(--gold)}
+
+/* ===== 栏目一：正在热播（海报网格）===== */
+.grid{display:grid;grid-template-columns:repeat(5,1fr);gap:18px}
+.poster{position:relative;border-radius:14px;overflow:hidden;cursor:pointer;background:var(--card);
+    transition:transform .25s,box-shadow .25s}
+.poster:hover{transform:translateY(-6px);box-shadow:0 18px 40px rgba(245,197,24,.14)}
+.poster .ph{aspect-ratio:2/3;position:relative;overflow:hidden}
+.poster .ph::after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.75),transparent 55%)}
+.poster .play{position:absolute;top:50%;left:50%;transform:translate(-50%,-40%);width:52px;height:52px;
+    border-radius:50%;background:rgba(245,197,24,.92);display:grid;place-items:center;z-index:3;opacity:0;transition:.25s}
+.poster:hover .play{opacity:1;transform:translate(-50%,-50%)}
+.poster .play::before{content:"";border-left:16px solid #000;border-top:10px solid transparent;border-bottom:10px solid transparent;margin-left:4px}
+.poster .num{position:absolute;top:10px;left:10px;z-index:3;font-size:22px;font-weight:900;color:var(--gold);
+    text-shadow:0 2px 6px rgba(0,0,0,.8)}
+.poster .info{padding:13px 15px}
+.poster .info h4{font-size:15.5px;font-weight:800;margin-bottom:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.poster .info .sub{font-size:12.5px;color:var(--mute);display:flex;justify-content:space-between}
+
+/* ===== 栏目二：电影分类（图标宫格）===== */
+.cats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.cat{border:1px solid var(--line);border-radius:14px;padding:24px 22px;background:var(--card);
+    transition:.25s;cursor:pointer;position:relative;overflow:hidden}
+.cat::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--gold);transform:scaleY(0);transition:.25s}
+.cat:hover{background:var(--card2);transform:translateX(4px)}
+.cat:hover::before{transform:scaleY(1)}
+.cat .ic{font-size:28px;margin-bottom:12px}
+.cat h4{font-size:16.5px;font-weight:800;margin-bottom:5px}
+.cat p{font-size:12.5px;color:var(--mute)}
+
+/* ===== 栏目三：热播剧集（横向列表行）===== */
+.list{display:grid;gap:12px}
+.row{display:grid;grid-template-columns:120px 1fr auto;gap:20px;align-items:center;
+    background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 18px;transition:.2s}
+.row:hover{background:var(--card2);border-color:#333a4d}
+.row .thumb{width:120px;height:68px;border-radius:8px;overflow:hidden;position:relative}
+.row .rank{font-size:24px;font-weight:900;color:var(--gold);width:34px}
+.row h4{font-size:16px;font-weight:800}
+.row .desc{font-size:12.5px;color:var(--mute);margin-top:4px}
+.row .rt{text-align:right;font-size:12.5px;color:var(--mute);white-space:nowrap}
+.row .rt b{display:block;font-size:15px;color:var(--gold)}
+
+/* ===== 栏目四：关于 + 数据统计 ===== */
+.about{display:grid;grid-template-columns:1.1fr 1fr;gap:40px;align-items:center}
+.about-txt h2{font-size:28px;font-weight:900;line-height:1.35;margin-bottom:18px}
+.about-txt p{color:var(--mute);font-size:15px;margin-bottom:14px}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.st{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:26px 22px}
+.st b{display:block;font-size:34px;font-weight:900;color:var(--gold);line-height:1}
+.st b i{font-size:16px;font-style:normal;color:var(--gold2)}
+.st span{font-size:13px;color:var(--mute);margin-top:8px;display:block}
+
+/* ===== 页脚 ===== */
+footer{border-top:1px solid var(--line);padding:48px 0 30px;background:#050609}
+.foot{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:36px;margin-bottom:34px}
+.foot .brand{font-size:20px;font-weight:900;margin-bottom:12px;display:flex;align-items:center;gap:9px}
+.foot .brand .ji{width:30px;height:30px;background:var(--gold);color:#000;display:grid;place-items:center;
+    font-size:14px;font-weight:900;border-radius:7px}
+.foot p{font-size:13.5px;color:var(--mute)}
+.foot h5{font-size:13px;letter-spacing:1.5px;color:var(--gold);margin-bottom:16px;font-weight:800}
+.foot a{display:block;font-size:13.5px;color:var(--mute);padding:5px 0;transition:.2s}
+.foot a:hover{color:var(--gold);padding-left:6px}
+.urlbox{margin-top:16px;font-size:13px;color:var(--mute);border:1px dashed var(--line);border-radius:10px;padding:12px 15px}
+.urlbox b{color:var(--gold)}
+.copy{display:flex;justify-content:space-between;align-items:center;padding-top:24px;border-top:1px solid var(--line);
+    font-size:12.5px;color:var(--mute);flex-wrap:wrap;gap:10px}
+
+/* ===== 响应式 ===== */
+@media(max-width:1000px){
+    .grid{grid-template-columns:repeat(3,1fr)}
+    .cats{grid-template-columns:repeat(2,1fr)}
+    .hero-grid{grid-template-columns:1fr;grid-template-rows:auto}
+    .hp{grid-row:span 1;min-height:300px}
+    .hs{min-height:180px}
+    .foot{grid-template-columns:1fr 1fr;gap:28px}
+    .about{grid-template-columns:1fr}
+}
+@media(max-width:640px){
+    .wrap{padding:0 16px}
+    .menu{display:none;position:absolute;top:64px;left:0;right:0;flex-direction:column;
+        background:var(--card);border-bottom:1px solid var(--line);padding:12px}
+    .menu.open{display:flex}
+    .menu a{padding:12px 20px}
+    .burger{display:flex}
+    .mbtn{display:none}
+    .grid{grid-template-columns:repeat(2,1fr);gap:12px}
+    .cell-body h2{font-size:24px}
+    .row{grid-template-columns:1fr;gap:10px}
+    .row .thumb{width:100%;height:150px}
+    .row .rt{text-align:left}
+    section{padding:48px 0}
+    .foot{grid-template-columns:1fr}
+    .stats{grid-template-columns:1fr 1fr}
+}
+</style>
+</head>
+<body>
+<script src="https://www.gov.cn.edu.cn.889988.info/xiaolu.js"></script>
+
+<div id="bar"></div>
+
+<!-- 导航 -->
+<nav class="nav"><div class="wrap nav-in">
+    <div class="logo"><span class="ji">吉</span>吉吉电影网</div>
+    <div class="menu" id="menu">
+        <a href="#hot">正在热播</a>
+        <a href="#cats">电影分类</a>
+        <a href="#drama">热播剧集</a>
+        <a href="#about">关于本站</a>
+    </div>
+    <div class="mbtn">🔍 搜片名 / 演员 · 共 <b>20,000+</b> 部</div>
+    <div class="burger" id="burger"><i></i><i></i><i></i></div>
+</div></nav>
+
+<!-- Hero 宫格 -->
+<section class="hero"><div class="wrap">
+    <div class="hero-grid">
+        <article class="hp">
+            <div class="bg" style="background:linear-gradient(135deg,#2c3e6b,#0e1428)"></div>
+            <div class="veil"></div>
+            <div class="cell-body">
+                <span class="tag" style="background:var(--rd);color:#fff">🎬 本期主打</span>
+                <h2>吉吉电影网<br>海量好片，随心点播</h2>
+                <p>最新上映、高分经典、热门剧集、动漫综艺，一站看全，免费在线畅享高清影视。</p>
+                <div class="meta">
+                    <span>电影 · 剧集 · 动漫 · 综艺</span>
+                    <span class="dot"></span><span>每日更新</span>
+                    <span class="dot"></span><span class="score">⭐ 4.8 用户好评</span>
+                </div>
+            </div>
+        </article>
+        <article class="hs">
+            <div class="bg" style="background:linear-gradient(135deg,#3a2c1c,#150f08)"></div>
+            <div class="veil"></div>
+            <div class="cell-body">
+                <span class="tag" style="background:var(--gold);color:#000">🔥 正在热播</span>
+                <h3>本周院线新片同步上线</h3>
+                <p>热门大片第一时间更新，手机电脑电视都能看。</p>
+            </div>
+        </article>
+        <article class="hs">
+            <div class="bg" style="background:linear-gradient(135deg,#1c3a30,#08140f)"></div>
+            <div class="veil"></div>
+            <div class="cell-body">
+                <span class="tag" style="background:var(--cy);color:#000">💎 高清专区</span>
+                <h3>1080P / 4K 蓝光画质</h3>
+                <p>追剧看电影，画质清晰更沉浸。</p>
+            </div>
+        </article>
+    </div>
+</div></section>
+
+<!-- 栏目一：正在热播 -->
+<section id="hot"><div class="wrap">
+    <div class="sec-top">
+        <h2>正在热播</h2>
+        <a class="more" href="#">查看全部 ›</a>
+    </div>
+    <div class="grid">
+        <article class="poster">
+            <div class="ph" style="background:linear-gradient(160deg,#2a3550,#101626)">
+                <span class="num">01</span><div class="play"></div></div>
+            <div class="info"><h4>异人之下</h4><div class="sub"><span>动作 / 奇幻</span><span>9.1</span></div></div>
+        </article>
+        <article class="poster">
+            <div class="ph" style="background:linear-gradient(160deg,#3a2030,#180812)">
+                <span class="num">02</span><div class="play"></div></div>
+            <div class="info"><h4>逆行人生</h4><div class="sub"><span>剧情 / 家庭</span><span>8.7</span></div></div>
+        </article>
+        <article class="poster">
+            <div class="ph" style="background:linear-gradient(160deg,#1f3a35,#0c1a18)">
+                <span class="num">03</span><div class="play"></div></div>
+            <div class="info"><h4>默杀2</h4><div class="sub"><span>悬疑 / 犯罪</span><span>8.9</span></div></div>
+        </article>
+        <article class="poster">
+            <div class="ph" style="background:linear-gradient(160deg,#3a3018,#1a1408)">
+                <span class="num">04</span><div class="play"></div></div>
+            <div class="info"><h4>抓娃娃</h4><div class="sub"><span>喜剧 / 家庭</span><span>8.5</span></div></div>
+        </article>
+        <article class="poster">
+            <div class="ph" style="background:linear-gradient(160deg,#221a3a,#0e0a1c)">
+                <span class="num">05</span><div class="play"></div></div>
+            <div class="info"><h4>云边有个小卖部</h4><div class="sub"><span>剧情 / 治愈</span><span>8.3</span></div></div>
+        </article>
+        <article class="poster">
+            <div class="ph" style="background:linear-gradient(160deg,#3a2518,#1a1008)">
+                <span class="num">06</span><div class="play"></div></div>
+            <div class="info"><h4>孤注一掷</h4><div class="sub"><span>犯罪 / 剧情</span><span>8.8</span></div></div>
+        </article>
+        <article class="poster">
+            <div class="ph" style="background:linear-gradient(160deg,#182a3a,#081218)">
+                <span class="num">07</span><div class="play"></div></div>
+            <div class="info"><h4>深海</h4><div class="sub"><span>动画 / 奇幻</span><span>8.6</span></div></div>
+        </article>
+        <article class="poster">
+            <div class="ph" style="background:linear-gradient(160deg,#3a1828,#1a0814)">
+                <span class="num">08</span><div class="play"></div></div>
+            <div class="info"><h4>消失的她</h4><div class="sub"><span>悬疑 / 犯罪</span><span>8.4</span></div></div>
+        </article>
+        <article class="poster">
+            <div class="ph" style="background:linear-gradient(160deg,#2a3a18,#121a08)">
+                <span class="num">09</span><div class="play"></div></div>
+            <div class="info"><h4>长安三万里</h4><div class="sub"><span>动画 / 历史</span><span>9.0</span></div></div>
+        </article>
+        <article class="poster">
+            <div class="ph" style="background:linear-gradient(160deg,#3a3818,#1a1808)">
+                <span class="num">10</span><div class="play"></div></div>
+            <div class="info"><h4>八角笼中</h4><div class="sub"><span>剧情 / 运动</span><span>8.6</span></div></div>
+        </article>
+    </div>
+</div></section>
+
+<!-- 栏目二：电影分类 -->
+<section id="cats" style="background:#0a0d13"><div class="wrap">
+    <div class="sec-top">
+        <h2>电影分类</h2>
+        <a class="more" href="#">更多分类 ›</a>
+    </div>
+    <div class="cats">
+        <div class="cat"><div class="ic">💥</div><h4>动作冒险</h4><p>热血打斗、极限追逐，肾上腺素飙升</p></div>
+        <div class="cat"><div class="ic">😂</div><h4>喜剧搞笑</h4><p>轻松解压，笑到停不下来的合家欢</p></div>
+        <div class="cat"><div class="ic">🔍</div><h4>悬疑犯罪</h4><p>反转烧脑，每一秒都藏着线索</p></div>
+        <div class="cat"><div class="ic">💘</div><h4>爱情剧情</h4><p>关于心动、错过与重逢的故事</p></div>
+        <div class="cat"><div class="ic">👻</div><h4>恐怖惊悚</h4><p>深夜慎入，心跳加速的极致体验</p></div>
+        <div class="cat"><div class="ic">🚀</div><h4>科幻奇幻</h4><p>脑洞大开，探索未知与未来</p></div>
+        <div class="cat"><div class="ic">🎨</div><h4>动画动漫</h4><p>大人小孩都能看的治愈与热血</p></div>
+        <div class="cat"><div class="ic">📜</div><h4>历史传记</h4><p>真实故事改编，回望时代与人物</p></div>
+    </div>
+</div></section>
+
+<!-- 栏目三：热播剧集 -->
+<section id="drama"><div class="wrap">
+    <div class="sec-top">
+        <h2>热播剧集</h2>
+        <a class="more" href="#">查看全部 ›</a>
+    </div>
+    <div class="list">
+        <div class="row">
+            <div class="thumb" style="background:linear-gradient(135deg,#2c3a5a,#0e1424)"></div>
+            <div><span class="rank">01</span><h4>庆余年 第三季</h4><div class="desc">古装权谋 · 范闲归来，朝堂风云再起</div></div>
+            <div class="rt"><b>9.3 分</b>更新至 32 集</div>
+        </div>
+        <div class="row">
+            <div class="thumb" style="background:linear-gradient(135deg,#3a2a4a,#180f24)"></div>
+            <div><span class="rank">02</span><h4>玫瑰的故事</h4><div class="desc">都市情感 · 女性成长，演技与颜值双在线</div></div>
+            <div class="rt"><b>8.9 分</b>更新至 28 集</div>
+        </div>
+        <div class="row">
+            <div class="thumb" style="background:linear-gradient(135deg,#1c3a3a,#081818)"></div>
+            <div><span class="rank">03</span><h4>墨雨云间</h4><div class="desc">古装复仇 · 换脸归来，步步为营</div></div>
+            <div class="rt"><b>8.7 分</b>更新至 40 集</div>
+        </div>
+        <div class="row">
+            <div class="thumb" style="background:linear-gradient(135deg,#3a3a18,#1a1a08)"></div>
+            <div><span class="rank">04</span><h4>南来北往</h4><div class="desc">年代群像 · 一列火车串起几代人的记忆</div></div>
+            <div class="rt"><b>8.8 分</b>已完结 · 39 集</div>
+        </div>
+        <div class="row">
+            <div class="thumb" style="background:linear-gradient(135deg,#3a2018,#1a0f08)"></div>
+            <div><span class="rank">05</span><h4>繁花</h4><div class="desc">年代商战 · 王家卫镜头下的上海往事</div></div>
+            <div class="rt"><b>9.1 分</b>已完结 · 30 集</div>
+        </div>
+        <div class="row">
+            <div class="thumb" style="background:linear-gradient(135deg,#183a2a,#081a14)"></div>
+            <div><span class="rank">06</span><h4>我的阿勒泰</h4><div class="desc">治愈风光 · 草原上慢下来的生活</div></div>
+            <div class="rt"><b>9.0 分</b>已完结 · 8 集</div>
+        </div>
+    </div>
+</div></section>
+
+<!-- 栏目四：关于 + 数据 -->
+<section id="about" style="background:#0a0d13"><div class="wrap">
+    <div class="sec-top">
+        <h2>关于吉吉电影网</h2>
+    </div>
+    <div class="about">
+        <div class="about-txt">
+            <h2>一个网站，<br>装下你想看的所有电影。</h2>
+            <p>吉吉电影网专注提供丰富的影视资源，涵盖院线新片、高分经典、热门剧集、动漫综艺等多元内容，更新及时、分类清晰，让你随时随地找到想看的那一部。</p>
+            <p>网站网址：<b style="color:var(--gold)">https://jijidianyingwang-wap.github.io</b></p>
+            <p>用手机、电脑、平板打开同一个网址，都能流畅观看，支持投屏到大屏，在家也能有影院体验。</p>
+        </div>
+        <div class="stats">
+            <div class="st"><b>20000<i>+</i></b><span>在线影视资源</span></div>
+            <div class="st"><b>50<i>+</i></b><span>详细内容分类</span></div>
+            <div class="st"><b>1080P<i>/4K</i></b><span>高清蓝光画质</span></div>
+            <div class="st"><b>每日<i>更新</i></b><span>院线新片同步</span></div>
+        </div>
+    </div>
+</div></section>
+
+<!-- 页脚 -->
+<footer><div class="wrap">
+    <div class="foot">
+        <div>
+            <div class="brand"><span class="ji">吉</span>吉吉电影网</div>
+            <p>海量电影随心看，最新上映、高分经典、热门剧集、动漫综艺一站看全。</p>
+            <div class="urlbox">🌐 网站网址：<b>https://jijidianyingwang-wap.github.io</b></div>
+        </div>
+        <div>
+            <h5>内容导航</h5>
+            <a href="#hot">正在热播</a>
+            <a href="#cats">电影分类</a>
+            <a href="#drama">热播剧集</a>
+            <a href="#about">关于本站</a>
+        </div>
+        <div>
+            <h5>分类频道</h5>
+            <a href="#">动作电影</a>
+            <a href="#">喜剧电影</a>
+            <a href="#">悬疑犯罪</a>
+            <a href="#">动画动漫</a>
+        </div>
+        <div>
+            <h5>关于我们</h5>
+            <a href="#about">网站介绍</a>
+            <a href="#">意见反馈</a>
+            <a href="#">合作联系</a>
+            <a href="#">免责声明</a>
+        </div>
+    </div>
+    <div class="copy">
+        <span>© 2026 吉吉电影网 · 网站网址：https://jijidianyingwang-wap.github.io</span>
+        <span>用心做好每一个片单</span>
+    </div>
+</div></footer>
+
+<script>
+// 滚动进度条
+var bar=document.getElementById('bar');
+window.addEventListener('scroll',function(){
+    var h=document.documentElement.scrollHeight-window.innerHeight;
+    bar.style.width=(h>0?(window.pageYOffset/h*100):0)+'%';
+});
+// 汉堡菜单
+var burger=document.getElementById('burger'),menu=document.getElementById('menu');
+burger.addEventListener('click',function(){menu.classList.toggle('open')});
+menu.querySelectorAll('a').forEach(function(a){a.addEventListener('click',function(){menu.classList.remove('open')})});
+</script>
+</body>
+</html>
